@@ -40,11 +40,9 @@ var DefaultLinkHandler = exports.DefaultLinkHandler = function (_LinkHandler) {
     var _this = _possibleConstructorReturn(this, _LinkHandler.call(this));
 
     _this.handler = function (e) {
-      var _DefaultLinkHandler$g = DefaultLinkHandler.getEventInfo(e);
-
-      var shouldHandleEvent = _DefaultLinkHandler$g.shouldHandleEvent;
-      var href = _DefaultLinkHandler$g.href;
-
+      var _DefaultLinkHandler$g = DefaultLinkHandler.getEventInfo(e),
+          shouldHandleEvent = _DefaultLinkHandler$g.shouldHandleEvent,
+          href = _DefaultLinkHandler$g.href;
 
       if (shouldHandleEvent) {
         e.preventDefault();
@@ -168,9 +166,9 @@ var BrowserHistory = exports.BrowserHistory = (_temp = _class = function (_Histo
 
         return true;
       } else if (this._hasPushState && atRoot && loc.hash) {
-          this.fragment = this._getHash().replace(routeStripper, '');
-          this.history.replaceState({}, _aureliaPal.DOM.title, this.root + this.fragment + loc.search);
-        }
+        this.fragment = this._getHash().replace(routeStripper, '');
+        this.history.replaceState({}, _aureliaPal.DOM.title, this.root + this.fragment + loc.search);
+      }
     }
 
     if (!this.fragment) {
@@ -197,12 +195,11 @@ var BrowserHistory = exports.BrowserHistory = (_temp = _class = function (_Histo
   };
 
   BrowserHistory.prototype.navigate = function navigate(fragment) {
-    var _ref = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-
-    var _ref$trigger = _ref.trigger;
-    var trigger = _ref$trigger === undefined ? true : _ref$trigger;
-    var _ref$replace = _ref.replace;
-    var replace = _ref$replace === undefined ? false : _ref$replace;
+    var _ref = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
+        _ref$trigger = _ref.trigger,
+        trigger = _ref$trigger === undefined ? true : _ref$trigger,
+        _ref$replace = _ref.replace,
+        replace = _ref$replace === undefined ? false : _ref$replace;
 
     if (fragment && absoluteUrl.test(fragment)) {
       this.location.href = fragment;
@@ -250,7 +247,7 @@ var BrowserHistory = exports.BrowserHistory = (_temp = _class = function (_Histo
   };
 
   BrowserHistory.prototype._getHash = function _getHash() {
-    return this.location.hash.substr(1);
+    return this.location.hash.replace('^#!?', '');
   };
 
   BrowserHistory.prototype._getFragment = function _getFragment(fragment, forcePushState) {
@@ -287,7 +284,7 @@ var BrowserHistory = exports.BrowserHistory = (_temp = _class = function (_Histo
   return BrowserHistory;
 }(_aureliaHistory.History), _class.inject = [LinkHandler], _temp);
 
-var routeStripper = /^#?\/*|\s+$/g;
+var routeStripper = /^#?!?\/*|\s+$/g;
 
 var rootStripper = /^\/+|\/+$/g;
 
@@ -298,9 +295,9 @@ var absoluteUrl = /^([a-z][a-z0-9+\-.]*:)?\/\//i;
 function updateHash(location, fragment, replace) {
   if (replace) {
     var _href = location.href.replace(/(javascript:|#).*$/, '');
-    location.replace(_href + '#' + fragment);
+    location.replace(_href + '#!' + fragment);
   } else {
-    location.hash = '#' + fragment;
+    location.hash = '#!' + fragment;
   }
 }
 

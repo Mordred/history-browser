@@ -130,9 +130,9 @@ export let BrowserHistory = (_temp = _class = class BrowserHistory extends Histo
 
         return true;
       } else if (this._hasPushState && atRoot && loc.hash) {
-          this.fragment = this._getHash().replace(routeStripper, '');
-          this.history.replaceState({}, DOM.title, this.root + this.fragment + loc.search);
-        }
+        this.fragment = this._getHash().replace(routeStripper, '');
+        this.history.replaceState({}, DOM.title, this.root + this.fragment + loc.search);
+      }
     }
 
     if (!this.fragment) {
@@ -155,7 +155,7 @@ export let BrowserHistory = (_temp = _class = class BrowserHistory extends Histo
 
   getAbsoluteRoot() {
     let origin = createOrigin(this.location.protocol, this.location.hostname, this.location.port);
-    return `${ origin }${ this.root }`;
+    return `${origin}${this.root}`;
   }
 
   navigate(fragment, { trigger = true, replace = false } = {}) {
@@ -205,7 +205,7 @@ export let BrowserHistory = (_temp = _class = class BrowserHistory extends Histo
   }
 
   _getHash() {
-    return this.location.hash.substr(1);
+    return this.location.hash.replace('^#!?', '');
   }
 
   _getFragment(fragment, forcePushState) {
@@ -240,7 +240,7 @@ export let BrowserHistory = (_temp = _class = class BrowserHistory extends Histo
   }
 }, _class.inject = [LinkHandler], _temp);
 
-const routeStripper = /^#?\/*|\s+$/g;
+const routeStripper = /^#?!?\/*|\s+$/g;
 
 const rootStripper = /^\/+|\/+$/g;
 
@@ -251,12 +251,12 @@ const absoluteUrl = /^([a-z][a-z0-9+\-.]*:)?\/\//i;
 function updateHash(location, fragment, replace) {
   if (replace) {
     let href = location.href.replace(/(javascript:|#).*$/, '');
-    location.replace(href + '#' + fragment);
+    location.replace(href + '#!' + fragment);
   } else {
-    location.hash = '#' + fragment;
+    location.hash = '#!' + fragment;
   }
 }
 
 function createOrigin(protocol, hostname, port) {
-  return `${ protocol }//${ hostname }${ port ? ':' + port : '' }`;
+  return `${protocol}//${hostname}${port ? ':' + port : ''}`;
 }

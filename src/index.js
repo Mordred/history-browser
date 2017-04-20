@@ -182,7 +182,7 @@ export class BrowserHistory extends History {
   }
 
   _getHash(): string {
-    return this.location.hash.substr(1);
+    return this.location.hash.replace('^#!?', '');
   }
 
   _getFragment(fragment: string, forcePushState?: boolean): string {
@@ -220,7 +220,7 @@ export class BrowserHistory extends History {
 }
 
 // Cached regex for stripping a leading hash/slash and trailing space.
-const routeStripper = /^#?\/*|\s+$/g;
+const routeStripper = /^#?!?\/*|\s+$/g;
 
 // Cached regex for stripping leading and trailing slashes.
 const rootStripper = /^\/+|\/+$/g;
@@ -238,10 +238,10 @@ const absoluteUrl = /^([a-z][a-z0-9+\-.]*:)?\/\//i;
 function updateHash(location, fragment, replace) {
   if (replace) {
     let href = location.href.replace(/(javascript:|#).*$/, '');
-    location.replace(href + '#' + fragment);
+    location.replace(href + '#!' + fragment);
   } else {
     // Some browsers require that `hash` contains a leading #.
-    location.hash = '#' + fragment;
+    location.hash = '#!' + fragment;
   }
 }
 
